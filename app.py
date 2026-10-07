@@ -1,12 +1,9 @@
 import streamlit as st
 
-from predict import (
-    predict_stock,
-    get_price_history
-)
+from predict import predict_stock, get_price_history
 
 
-# NIFTY 50 stocks
+# NIFTY 50 STOCKS
 
 NIFTY_50 = {
     "Adani Enterprises": "ADANIENT.NS",
@@ -64,126 +61,520 @@ NIFTY_50 = {
 }
 
 
-# Page configuration
+# PAGE CONFIGURATION
 
 st.set_page_config(
-    page_title="NIFTY 50 Stock Predictor",
-    page_icon="📈",
-    layout="centered"
+    page_title="NIFTY 50 Analytics",
+    page_icon="N",
+    layout="wide",
+    initial_sidebar_state="expanded"
 )
 
 
-# Title
+# CORPORATE STYLING
 
-st.title("NIFTY 50 Stock Predictor")
+st.markdown(
+    """
+    <style>
 
-st.write(
-    "Predict the expected stock return over the next "
-    "5 trading days using Linear Regression and Random Forest."
+    #MainMenu {
+        visibility: hidden;
+    }
+
+    footer {
+        visibility: hidden;
+    }
+
+    header {
+        visibility: hidden;
+    }
+
+    .stApp {
+        background-color: #f5f7fa;
+    }
+
+    [data-testid="stSidebar"] {
+        background-color: #0f1f33;
+    }
+
+    [data-testid="stSidebar"] * {
+        color: white;
+    }
+
+    .block-container {
+        padding-top: 2rem;
+        padding-bottom: 3rem;
+        max-width: 1400px;
+    }
+
+    .top-header {
+        background: #0f1f33;
+        padding: 24px 30px;
+        border-radius: 12px;
+        margin-bottom: 24px;
+        color: white;
+        border: 1px solid #1d3552;
+    }
+
+    .brand {
+        font-size: 28px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+    }
+
+    .subtitle {
+        font-size: 14px;
+        color: #b7c5d6;
+        margin-top: 6px;
+    }
+
+    .section-title {
+        font-size: 20px;
+        font-weight: 650;
+        color: #16263d;
+        margin-top: 24px;
+        margin-bottom: 12px;
+    }
+
+    .stock-header {
+        background: white;
+        padding: 20px 24px;
+        border-radius: 10px;
+        border: 1px solid #e1e6ec;
+        margin-bottom: 18px;
+    }
+
+    .stock-name {
+        font-size: 25px;
+        font-weight: 700;
+        color: #16263d;
+    }
+
+    .ticker {
+        font-size: 13px;
+        color: #718096;
+        margin-top: 4px;
+    }
+
+    .metric-card {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        border: 1px solid #e1e6ec;
+        min-height: 125px;
+    }
+
+    .metric-label {
+        font-size: 13px;
+        color: #718096;
+        margin-bottom: 8px;
+    }
+
+    .metric-value {
+        font-size: 27px;
+        font-weight: 700;
+        color: #16263d;
+    }
+
+    .metric-description {
+        font-size: 12px;
+        color: #8a96a6;
+        margin-top: 6px;
+    }
+
+    .prediction-card {
+        background: white;
+        padding: 22px;
+        border-radius: 10px;
+        border: 1px solid #e1e6ec;
+        min-height: 170px;
+    }
+
+    .prediction-title {
+        font-size: 17px;
+        font-weight: 650;
+        color: #16263d;
+        margin-bottom: 18px;
+    }
+
+    .prediction-return {
+        font-size: 30px;
+        font-weight: 700;
+        color: #16263d;
+    }
+
+    .prediction-price {
+        font-size: 15px;
+        color: #66758a;
+        margin-top: 8px;
+    }
+
+    .chart-card {
+        background: white;
+        padding: 18px 22px 10px 22px;
+        border-radius: 10px;
+        border: 1px solid #e1e6ec;
+    }
+
+    .status {
+        display: inline-block;
+        background: #e8f1fb;
+        color: #24527a;
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .disclaimer {
+        background: #eef2f6;
+        padding: 15px 18px;
+        border-radius: 8px;
+        color: #66758a;
+        font-size: 12px;
+        margin-top: 25px;
+        border: 1px solid #dde3ea;
+    }
+
+    </style>
+    """,
+    unsafe_allow_html=True
 )
 
 
-# Stock selection
+# HEADER
 
-stock_name = st.selectbox(
-    "Select a NIFTY 50 stock",
-    list(NIFTY_50.keys())
+st.markdown(
+    """
+    <div class="top-header">
+        <div class="brand">NIFTY 50 ANALYTICS</div>
+        <div class="subtitle">
+            Machine Learning powered stock return analysis and forecasting
+        </div>
+    </div>
+    """,
+    unsafe_allow_html=True
 )
 
-ticker = NIFTY_50[stock_name]
+
+# SIDEBAR
+
+with st.sidebar:
+
+    st.markdown(
+        """
+        <div style="font-size:22px;font-weight:700;margin-bottom:4px;">
+        Market Analysis
+        </div>
+
+        <div style="font-size:13px;color:#b7c5d6;margin-bottom:25px;">
+        Select a NIFTY 50 constituent
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+    stock_name = st.selectbox(
+        "Stock",
+        list(NIFTY_50.keys())
+    )
+
+    ticker = NIFTY_50[stock_name]
+
+    st.markdown("<br>", unsafe_allow_html=True)
+
+    predict_button = st.button(
+        "GENERATE FORECAST",
+        type="primary",
+        use_container_width=True
+    )
+
+    st.markdown(
+        """
+        <div style="
+            margin-top:30px;
+            padding-top:20px;
+            border-top:1px solid #29405d;
+            font-size:12px;
+            color:#9fb0c4;
+            line-height:1.6;
+        ">
+        Data source<br>
+        Yahoo Finance<br><br>
+
+        Forecast horizon<br>
+        5 trading days<br><br>
+
+        Models<br>
+        Linear Regression<br>
+        Random Forest
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 
 
-# Prediction
+# MAIN APPLICATION
 
-if st.button("Predict", type="primary"):
+if predict_button:
 
-    with st.spinner(
-        "Downloading market data and generating prediction..."
-    ):
+    with st.spinner("Processing market data and generating forecast..."):
 
         try:
 
             result = predict_stock(ticker)
 
-            st.success(
-                "Prediction completed successfully."
-            )
-
-            st.subheader(stock_name)
-
-            # Current price
-
-            st.metric(
-            "Current Price",
-            f"₹{result['current_price']:.2f}"
-            )
-
-            st.divider()
-
-            # Historical price chart
-
-            st.subheader("6-Month Price History")
-
             price_history = get_price_history(ticker)
 
-            st.line_chart(
-                price_history["Close"]
+            # STOCK HEADER
+
+            st.markdown(
+                f"""
+                <div class="stock-header">
+                    <div class="stock-name">{stock_name}</div>
+                    <div class="ticker">
+                        NSE: {ticker.replace(".NS", "")}
+                        &nbsp;&nbsp; | &nbsp;&nbsp;
+                        <span class="status">LIVE DATA</span>
+                    </div>
+                </div>
+                """,
+                unsafe_allow_html=True
             )
 
-            st.divider()
+            # KEY METRICS
 
-            # Model predictions
+            st.markdown(
+                '<div class="section-title">Market Overview</div>',
+                unsafe_allow_html=True
+            )
+
+            col1, col2, col3 = st.columns(3)
+
+            with col1:
+
+                st.markdown(
+                    f"""
+                    <div class="metric-card">
+                        <div class="metric-label">CURRENT PRICE</div>
+                        <div class="metric-value">
+                            ₹{result["current_price"]:,.2f}
+                        </div>
+                        <div class="metric-description">
+                            Latest available market price
+                        </div>
+                    </div>
+                    """,
+                    unsafe_allow_html=True
+                )
+
+            with col2:
+
+                st.markdown(
+                    f"""
+                    <div class="metric-card">
+                        <div class="metric-label">
+                            LINEAR REGRESSION RETURN
+                        </div>
+                        <div class="metric-value">
+                            {result["linear_return"] * 100:.2f}%
+                        </div>
+                        <div class="metric-description">
+                            Expected 5-day return
+                        </div>
+                    </div>
+                    """,
+                    unsafe_allow_html=True
+                )
+
+            with col3:
+
+                st.markdown(
+                    f"""
+                    <div class="metric-card">
+                        <div class="metric-label">
+                            RANDOM FOREST RETURN
+                        </div>
+                        <div class="metric-value">
+                            {result["random_forest_return"] * 100:.2f}%
+                        </div>
+                        <div class="metric-description">
+                            Expected 5-day return
+                        </div>
+                    </div>
+                    """,
+                    unsafe_allow_html=True
+                )
+
+            # PRICE HISTORY
+
+            st.markdown(
+                '<div class="section-title">Price Performance</div>',
+                unsafe_allow_html=True
+            )
+
+            st.markdown(
+                '<div class="chart-card">',
+                unsafe_allow_html=True
+            )
+
+            st.line_chart(
+                price_history["Close"],
+                height=360
+            )
+
+            st.markdown(
+                '</div>',
+                unsafe_allow_html=True
+            )
+
+            # MODEL FORECAST
+
+            st.markdown(
+                '<div class="section-title">Model Forecast</div>',
+                unsafe_allow_html=True
+            )
 
             col1, col2 = st.columns(2)
 
             with col1:
 
-                st.subheader("Linear Regression")
+                st.markdown(
+                    f"""
+                    <div class="prediction-card">
+                        <div class="prediction-title">
+                            Linear Regression
+                        </div>
 
-                st.metric(
-                    "5-Day Return",
-                    f"{result['linear_return'] * 100:.2f}%"
-                )
+                        <div class="prediction-return">
+                            {result["linear_return"] * 100:.2f}%
+                        </div>
 
-                st.write(
-                    "Predicted Price"
-                )
-
-                st.write(
-                    f"₹{result['linear_price']:.2f}"
+                        <div class="prediction-price">
+                            Estimated price after 5 trading days:
+                            <strong>
+                                ₹{result["linear_price"]:,.2f}
+                            </strong>
+                        </div>
+                    </div>
+                    """,
+                    unsafe_allow_html=True
                 )
 
             with col2:
 
-                st.subheader("Random Forest")
+                st.markdown(
+                    f"""
+                    <div class="prediction-card">
+                        <div class="prediction-title">
+                            Random Forest
+                        </div>
 
-                st.metric(
-                    "5-Day Return",
-                    f"{result['random_forest_return'] * 100:.2f}%"
+                        <div class="prediction-return">
+                            {result["random_forest_return"] * 100:.2f}%
+                        </div>
+
+                        <div class="prediction-price">
+                            Estimated price after 5 trading days:
+                            <strong>
+                                ₹{result["random_forest_price"]:,.2f}
+                            </strong>
+                        </div>
+                    </div>
+                    """,
+                    unsafe_allow_html=True
                 )
 
-                st.write(
-                    "Predicted Price"
-                )
+            # MODEL COMPARISON
 
-                st.write(
-                    f"₹{result['random_forest_price']:.2f}"
-                )
-
-            st.divider()
-
-            st.caption(
-                f"Yahoo Finance ticker: {result['ticker']}"
+            st.markdown(
+                '<div class="section-title">Forecast Comparison</div>',
+                unsafe_allow_html=True
             )
 
-            st.info(
-                "This prediction is generated by machine "
-                "learning models for educational purposes "
-                "and is not financial advice."
+            comparison_data = {
+                "Model": [
+                    "Linear Regression",
+                    "Random Forest"
+                ],
+                "Expected Return": [
+                    f"{result['linear_return'] * 100:.2f}%",
+                    f"{result['random_forest_return'] * 100:.2f}%"
+                ],
+                "Estimated Price": [
+                    f"₹{result['linear_price']:,.2f}",
+                    f"₹{result['random_forest_price']:,.2f}"
+                ]
+            }
+
+            st.dataframe(
+                comparison_data,
+                use_container_width=True,
+                hide_index=True
+            )
+
+            # DISCLAIMER
+
+            st.markdown(
+                """
+                <div class="disclaimer">
+                    <strong>Important:</strong>
+                    This application is an educational machine learning project.
+                    Forecasts are generated from historical market data and simple
+                    regression models. They should not be interpreted as financial
+                    advice or investment recommendations.
+                </div>
+                """,
+                unsafe_allow_html=True
             )
 
         except Exception as e:
 
             st.error(
-                f"Unable to generate prediction: {e}"
+                f"Unable to generate forecast: {e}"
             )
+
+else:
+
+    st.markdown(
+        """
+        <div style="
+            background:white;
+            padding:60px 40px;
+            border-radius:12px;
+            border:1px solid #e1e6ec;
+            text-align:center;
+            margin-top:20px;
+        ">
+
+        <div style="
+            font-size:28px;
+            font-weight:700;
+            color:#16263d;
+        ">
+        Market Intelligence Dashboard
+        </div>
+
+        <div style="
+            font-size:15px;
+            color:#718096;
+            margin-top:12px;
+        ">
+        Select a NIFTY 50 stock from the sidebar to generate
+        a machine learning based 5-day forecast.
+        </div>
+
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+    st.markdown(
+        """
+        <div class="disclaimer">
+            Select a stock and click <strong>GENERATE FORECAST</strong>
+            to begin the analysis.
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
