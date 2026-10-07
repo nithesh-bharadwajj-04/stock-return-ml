@@ -1,14 +1,3 @@
-Yes. Let's make the README professional but still appropriate for a **beginner ML project**. It should explain what you built without pretending that the model is production-grade.
-
-Open:
-
-```text
-README.md
-```
-
-Delete everything currently inside it and paste this:
-
-````markdown
 # NIFTY 50 Stock Return Predictor
 
 A beginner-friendly end-to-end Machine Learning project that predicts the expected stock return over the next 5 trading days.
@@ -362,5 +351,3 @@ I intentionally worded the README carefully around the **current implementation*
 
 For this beginner project, that's acceptable given your stated goal, but we should **not claim in the README that the models were trained on the NIFTY 50** when they weren't.
 
-Once you've pasted and saved the README, tell me **done**. Then we'll create the `.gitignore` and do the final project cleanup.
-```
