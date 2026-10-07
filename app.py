@@ -445,11 +445,9 @@ if predict_button:
                         <div class="prediction-title">
                             Linear Regression
                         </div>
-
                         <div class="prediction-return">
                             {result["linear_return"] * 100:.2f}%
                         </div>
-
                         <div class="prediction-price">
                             Estimated price after 5 trading days:
                             <strong>
@@ -469,11 +467,9 @@ if predict_button:
                         <div class="prediction-title">
                             Random Forest
                         </div>
-
                         <div class="prediction-return">
                             {result["random_forest_return"] * 100:.2f}%
                         </div>
-
                         <div class="prediction-price">
                             Estimated price after 5 trading days:
                             <strong>
