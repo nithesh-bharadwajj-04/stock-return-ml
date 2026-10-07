@@ -510,48 +510,7 @@ if predict_button:
                 </div>
                 """
             )
-            # MODEL COMPARISON
-
-            st.markdown(
-                '<div class="section-title">Forecast Comparison</div>',
-                unsafe_allow_html=True
-            )
-
-            comparison_data = {
-                "Model": [
-                    "Linear Regression",
-                    "Random Forest"
-                ],
-                "Expected Return": [
-                    f"{result['linear_return'] * 100:.2f}%",
-                    f"{result['random_forest_return'] * 100:.2f}%"
-                ],
-                "Estimated Price": [
-                    f"₹{result['linear_price']:,.2f}",
-                    f"₹{result['random_forest_price']:,.2f}"
-                ]
-            }
-
-            st.dataframe(
-                comparison_data,
-                use_container_width=True,
-                hide_index=True
-            )
-
-            # DISCLAIMER
-
-            st.markdown(
-                """
-                <div class="disclaimer">
-                    <strong>Important:</strong>
-                    This application is an educational machine learning project.
-                    Forecasts are generated from historical market data and simple
-                    regression models. They should not be interpreted as financial
-                    advice or investment recommendations.
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
+            
 
         except Exception as e:
 
