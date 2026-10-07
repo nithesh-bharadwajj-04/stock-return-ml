@@ -413,10 +413,10 @@ if predict_button:
                 unsafe_allow_html=True
             )
 
-            st.markdown(
-                '<div class="chart-card">',
-                unsafe_allow_html=True
-            )
+            # st.markdown(
+            #     '<div class="chart-card">',
+            #     unsafe_allow_html=True
+            # )
 
             st.line_chart(
                 price_history["Close"],
@@ -439,48 +439,77 @@ if predict_button:
 
             with col1:
 
-                st.markdown(
+                linear_return = result["linear_return"] * 100
+
+                linear_return_color = "#c62828" if linear_return < 0 else "#16803c"
+
+                st.html(
                     f"""
                     <div class="prediction-card">
                         <div class="prediction-title">
                             Linear Regression
                         </div>
-                        <div class="prediction-return">
-                            {result["linear_return"] * 100:.2f}%
+                        <div class="prediction-return"
+                            style="color:{linear_return_color};">
+                            {linear_return:+.2f}%
                         </div>
-                        <div class="prediction-price">
-                            Estimated price after 5 trading days:
-                            <strong>
-                                ₹{result["linear_price"]:,.2f}
-                            </strong>
+                        <div class="prediction-label">
+                            Expected 5-day return
+                        </div>
+                        <div class="prediction-price" style="font-size:30px;color:#66758a; font-weight: bold;">
+                            ₹{result["linear_price"]:,.2f}
+                        </div>
+                        <div class="prediction-price-label" style="color:#66758a;">
+                            Estimated price after 5 trading days
                         </div>
                     </div>
-                    """,
-                    unsafe_allow_html=True
+                    """
                 )
+
 
             with col2:
 
-                st.markdown(
+                rf_return = result["random_forest_return"] * 100
+
+                rf_return_color = "#c62828" if rf_return < 0 else "#16803c"
+
+                st.html(
                     f"""
                     <div class="prediction-card">
                         <div class="prediction-title">
                             Random Forest
                         </div>
-                        <div class="prediction-return">
-                            {result["random_forest_return"] * 100:.2f}%
+                        <div class="prediction-return"
+                            style="color:{rf_return_color};">
+                            {rf_return:+.2f}%
                         </div>
-                        <div class="prediction-price">
-                            Estimated price after 5 trading days:
-                            <strong>
-                                ₹{result["random_forest_price"]:,.2f}
-                            </strong>
+                        <div class="prediction-label">
+                            Expected 5-day return
+                        </div>
+                        <div class="prediction-price" style="font-size:30px;color:#66758a; font-weight: bold;">
+                            ₹{result["random_forest_price"]:,.2f}
+                        </div>
+                        <div class="prediction-price-label" style="color:#66758a;">
+                            Estimated price after 5 trading days
                         </div>
                     </div>
-                    """,
-                    unsafe_allow_html=True
+                    """
                 )
 
+
+            # DISCLAIMER
+
+            st.html(
+                """
+                <div class="disclaimer">
+                    <strong>Important:</strong>
+                    This application is an educational machine learning project.
+                    Forecasts are generated from historical market data and simple
+                    regression models. They should not be interpreted as financial
+                    advice or investment recommendations.
+                </div>
+                """
+            )
             # MODEL COMPARISON
 
             st.markdown(
